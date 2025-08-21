@@ -7,6 +7,7 @@
     <nav style="display:flex; gap:12px;">
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/login">Login</RouterLink> <!-- handy link while developing -->
+      <RouterLink to="/chat">Chat</RouterLink> <!-- handy link while developing -->
     </nav>
   </header>
 
