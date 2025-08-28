@@ -2,8 +2,9 @@
   "OpenAiSettings" : {
     "ApiKey": "" 
   },
-    "ConnectionStrings": {
-    "AppDbContext": ""
+  "ConnectionStrings": {
+    "AppDbContext": "",
+    "PgVectorDbContext": "Host=localhost;Port=5432;Database=app_rag;Username=postgres;Password=postgres;Pooling=true;Minimum Pool Size=1;Maximum Pool Size=20;SSL Mode=Disable;Include Error Detail=true"
   },
   "Serilog": {
     "MinimumLevel": {

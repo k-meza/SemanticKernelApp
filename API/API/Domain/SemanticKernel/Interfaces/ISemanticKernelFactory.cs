@@ -3,7 +3,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace API.Domain.SemanticKernel.Interfaces;
 
-public interface IKernelFactory
+public interface ISemanticKernelFactory
 {
     Kernel Create(string modelId);
     IChatCompletionService GetChatService(Kernel kernel);

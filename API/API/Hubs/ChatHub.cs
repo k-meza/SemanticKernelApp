@@ -11,12 +11,12 @@ public class ChatHub : Hub
 {
     private readonly ILogger<ChatHub> _logger;
     private readonly ISessionManager _sessions;
-    private readonly IKernelFactory _kernelFactory;
+    private readonly ISemanticKernelFactory _semanticKernelFactory;
 
-    public ChatHub(ISessionManager sessions, IKernelFactory kernelFactory, ILogger<ChatHub> logger)
+    public ChatHub(ISessionManager sessions, ISemanticKernelFactory semanticKernelFactory, ILogger<ChatHub> logger)
     {
         _sessions = sessions;
-        _kernelFactory = kernelFactory;
+        _semanticKernelFactory = semanticKernelFactory;
         _logger = logger;
     }
 
@@ -47,8 +47,8 @@ public class ChatHub : Hub
                 connectionId, modelId);
 
             // Build kernel and get chat service
-            var kernel = _kernelFactory.Create(session.ModelId);
-            var chat = _kernelFactory.GetChatService(kernel);
+            var kernel = _semanticKernelFactory.Create(session.ModelId);
+            var chat = _semanticKernelFactory.GetChatService(kernel);
 
             // Add user message to history
             session.History.AddUserMessage(userMessage);

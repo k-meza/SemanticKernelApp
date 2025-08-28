@@ -6,7 +6,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace API.Domain.SemanticKernel;
 
-public class SemanticKernelFactory : IKernelFactory
+public class SemanticKernelFactory : ISemanticKernelFactory
 {
     private readonly ILogger<SemanticKernelFactory> _logger;
     private readonly OpenAiSettings _opts;
