@@ -1,3 +1,7 @@
+using API.Domain.SemanticKernel;
+using API.Domain.SemanticKernel.Interfaces;
+using API.Domain.SessionManager;
+using API.Options;
 using Microsoft.Extensions.Options;
 
 namespace API;
@@ -7,17 +11,19 @@ public static class ServicesConfiguration
     public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
     {
         // Configuration
+        services.AddOptionsAsSelf<OpenAiSettings>(configuration.GetSection("OpenAiSettings"));
 
-        
         // Hubs
-
+        services.AddSignalR();
 
         // Domain
-
+        services.AddSingleton<ISessionManager, InMemorySessionManager>();
+        services.AddSingleton<IKernelFactory, SemanticKernelFactory>();
+        
 
         // Repositories
 
-        
+
         // Clients
 
 

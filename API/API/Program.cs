@@ -1,4 +1,5 @@
 using API;
+using API.Hubs;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Declare CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.WithOrigins("http://localhost:5173") // Specify the exact origin
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()); // Allow credentials is important for SignalR
+});
 
 // Add configuration or service dependencies here.
 ServicesConfiguration.RegisterServices(builder.Services, builder.Configuration);
@@ -32,8 +42,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapControllers();
+
+app.MapHub<ChatHub>("/chat");
+
+app.UseCors("AllowSpecificOrigin");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
 
 app.Run();

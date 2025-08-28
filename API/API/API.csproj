@@ -18,6 +18,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.63.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.63.0" />
         <PackageReference Include="Serilog" Version="4.3.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
@@ -27,12 +29,9 @@
 
     <ItemGroup>
       <Folder Include="Domain\Model\" />
-      <Folder Include="Domain\Services\" />
       <Folder Include="Helpers\" />
-      <Folder Include="Hubs\" />
       <Folder Include="Infrastructure\" />
-      <Folder Include="Options\" />
-      <Folder Include="Repositories\" />
+      <Folder Include="Repositories\AppDbContext\" />
     </ItemGroup>
 
 </Project>
