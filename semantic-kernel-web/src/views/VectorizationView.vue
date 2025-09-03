@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 
+// Type definition matching the C# VectorizationResult record
+interface VectorizationResult {
+  documentId: string; // Guid becomes string in JSON
+  title: string;
+  chunkCount: number;
+}
+
 // State for file upload
 const fileUploadForm = reactive({
   file: null as File | null,
   isUploading: false,
-  uploadResult: null as any,
+  uploadResult: null as VectorizationResult | null,
   uploadError: null as string | null
 });
 
@@ -13,7 +20,7 @@ const fileUploadForm = reactive({
 const pathIngestForm = reactive({
   path: '',
   isIngesting: false,
-  ingestResult: null as any,
+  ingestResult: null as VectorizationResult | null,
   ingestError: null as string | null
 });
 
@@ -57,7 +64,7 @@ async function uploadFile() {
       throw new Error(`Upload failed: ${response.status} ${errorText}`);
     }
 
-    fileUploadForm.uploadResult = await response.json();
+    fileUploadForm.uploadResult = await response.json() as VectorizationResult;
 
     // Clear the file input
     if (fileInput.value) {
@@ -93,7 +100,7 @@ async function ingestFilePath() {
       throw new Error(`Ingestion failed: ${response.status} ${errorText}`);
     }
 
-    pathIngestForm.ingestResult = await response.json();
+    pathIngestForm.ingestResult = await response.json() as VectorizationResult;
     pathIngestForm.path = '';
 
   } catch (error) {
