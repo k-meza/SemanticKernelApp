@@ -1,6 +1,9 @@
 using API.Domain.SemanticKernel;
 using API.Domain.SemanticKernel.Interfaces;
 using API.Domain.SessionManager;
+using API.Domain.Vectorization;
+using API.Domain.Vectorization.Interfaces;
+using API.Domain.Vectorization.TextExctractor;
 using API.Options;
 using API.Repositories.PgVectorDbContext;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +18,7 @@ public static class ServicesConfiguration
     {
         // Configuration
         services.AddOptionsAsSelf<OpenAiSettings>(configuration.GetSection("OpenAiSettings"));
+        services.AddOptionsAsSelf<VectorizationOptions>(configuration.GetSection("VectorizationOptions"));
 
         // Hubs
         services.AddSignalR();
@@ -23,31 +27,34 @@ public static class ServicesConfiguration
         services.AddSingleton<ISessionManager, InMemorySessionManager>();
         services.AddSingleton<ISemanticKernelFactory, SemanticKernelFactory>();
 
+        services.AddScoped<ITextChuncker, TextChunker>();
+        
+        // Text Extractors
+        services.AddSingleton<IFileTextExtractor, TxtTextExtractor>();
+        services.AddSingleton<IFileTextExtractor, PdfTextExtractor>();
+        services.AddSingleton<IFileTextExtractor, DocxTextExtractor>();
+        services.AddSingleton<IFileTextExtractorFactory, FileTextExtractorFactory>();
+
+        services.AddScoped<IVectorizationService, DocumentVectorizationService>();
+        services.AddScoped<IRetrievalService, PgVectorRetrievalService>();
+
+        
+        
 
         // Repositories
-        // 1) Get connection string
-        var cs = configuration.GetConnectionString("PgVectorDbContext");
-
-        // 2) Build an NpgsqlDataSource with pgvector enabled
-        var dsb = new NpgsqlDataSourceBuilder(cs);
-        dsb.UseVector(); // <-- IMPORTANT: enables pgvector type mapping
-        var dataSource = dsb.Build();
-
-        // 3) Register in DI
-        services.AddSingleton(dataSource);
-
-        services.AddDbContext<PgVectorDbContext>((sp, opts) =>
+        Action<DbContextOptionsBuilder> configureDb = opts =>
         {
-            var ds = sp.GetRequiredService<NpgsqlDataSource>();
-            opts.UseNpgsql(ds, npg =>
+            var cs = configuration.GetConnectionString("PgVectorDbContext");
+            opts.UseNpgsql(cs, npg =>
             {
+                npg.UseVector();
                 npg.EnableRetryOnFailure();
             });
-        });
+        };
+
+        services.AddDbContext<PgVectorDbContext>(configureDb);
         
-        // Run migrations on startup in Dev
-        services.AddHostedService(sp => new PgVectorDbContextMigrator(sp.GetRequiredService<IDbContextFactory<PgVectorDbContext>>(),
-            sp.GetRequiredService<IServiceProvider>()));
+
 
 
         // Clients

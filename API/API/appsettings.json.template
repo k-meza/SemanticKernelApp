@@ -1,6 +1,8 @@
 {
   "OpenAiSettings" : {
-    "ApiKey": "" 
+    "ApiKey": "",
+    "ChatModelId" : "gpt-4o-mini",
+    "EmbeddingModelId" : "text-embedding-3-small"
   },
   "ConnectionStrings": {
     "AppDbContext": "",
