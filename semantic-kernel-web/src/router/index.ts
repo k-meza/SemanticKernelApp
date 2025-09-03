@@ -5,12 +5,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '../views/LoginView.vue';
 import HomeView from '../views/HomeView.vue';
 import ChatView from '../views/ChatView.vue';
+import VectorizationView from '../views/VectorizationView.vue';
 import { getCurrentUser } from 'aws-amplify/auth';
 
 const routes = [
   { path: '/login', name: 'login', component: LoginView },
   { path: '/', name: 'home', component: HomeView, meta: { requiresAuth: true } },
   { path: '/chat', name: 'chat', component: ChatView, meta: { requiresAuth: true } },
+  { path: '/vectorization', name: 'vectorization', component: VectorizationView, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({

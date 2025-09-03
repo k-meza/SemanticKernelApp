@@ -8,6 +8,7 @@
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/login">Login</RouterLink> <!-- handy link while developing -->
       <RouterLink to="/chat">Chat</RouterLink> <!-- handy link while developing -->
+      <RouterLink to="/vectorization">Vectorization</RouterLink>
     </nav>
   </header>
 
