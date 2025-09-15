@@ -1,5 +1,6 @@
 using API.Domain.SemanticKernel;
 using API.Domain.SemanticKernel.Interfaces;
+using API.Domain.SemanticKernel.Plugins;
 using API.Domain.SessionManager;
 using API.Domain.Vectorization;
 using API.Domain.Vectorization.Interfaces;
@@ -38,7 +39,8 @@ public static class ServicesConfiguration
         services.AddScoped<IVectorizationService, DocumentVectorizationService>();
         services.AddScoped<IRetrievalService, PgVectorRetrievalService>();
 
-        
+        // Semantic Kernel Plugins
+        services.AddSingleton<TerminalPlugin>();
         
 
         // Repositories

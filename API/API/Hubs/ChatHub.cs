@@ -4,6 +4,7 @@ using API.Domain.SemanticKernel.Interfaces;
 using API.Domain.SessionManager;
 using API.Domain.Vectorization.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
@@ -53,6 +54,8 @@ public class ChatHub : Hub
             // Build kernel and get chat service
             var kernel = _semanticKernelFactory.Create(session.ModelId);
             var chat = _semanticKernelFactory.GetChatService(kernel);
+            
+            
 
             // Add user message to history
             session.History.AddUserMessage(userMessage);
@@ -65,6 +68,15 @@ public class ChatHub : Hub
 
             // Create an augmented history for this turn only (do not pollute the persistent history)
             var augmented = new ChatHistory();
+            
+            augmented.AddSystemMessage(
+                "You can call tools. When the user asks to print hello from the terminal, " +
+                "call terminal.HelloWorldAsync(). Keep responses short." +
+                "If the user asks to run a command, call terminal.RunAsync(input) where input is the requested command."
+            );
+            
+            
+            
             foreach (var msg in session.History)
             {
                 var role = msg.Role.ToString()?.ToLowerInvariant();
@@ -91,7 +103,8 @@ public class ChatHub : Hub
             var settings = new OpenAIPromptExecutionSettings
             {
                 Temperature = temperature,
-                MaxTokens = maxTokens
+                MaxTokens = maxTokens,
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
             };
 
             // Stream response
