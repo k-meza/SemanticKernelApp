@@ -1,4 +1,5 @@
 using API.Domain.SemanticKernel;
+using API.Domain.SemanticKernel.ActionFilters;
 using API.Domain.SemanticKernel.Interfaces;
 using API.Domain.SemanticKernel.Plugins;
 using API.Domain.SessionManager;
@@ -9,6 +10,7 @@ using API.Options;
 using API.Repositories.PgVectorDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.SemanticKernel;
 using Npgsql;
 
 namespace API;
@@ -41,6 +43,9 @@ public static class ServicesConfiguration
 
         // Semantic Kernel Plugins
         services.AddSingleton<TerminalPlugin>();
+        
+        // Semantic Kernel Action Filters
+        services.AddSingleton<IFunctionInvocationFilter, TerminalCommandGuardFilter>();
         
 
         // Repositories

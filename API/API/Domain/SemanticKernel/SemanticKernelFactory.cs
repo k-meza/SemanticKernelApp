@@ -1,3 +1,4 @@
+using API.Domain.SemanticKernel.ActionFilters;
 using API.Domain.SemanticKernel.Interfaces;
 using API.Domain.SemanticKernel.Plugins;
 using API.Domain.Vectorization;
@@ -24,6 +25,7 @@ public sealed class SemanticKernelFactory : ISemanticKernelFactory
         _opts = opts.Value;
         _vectorizationOptions = vectorizationOptions;
         _services = services;
+        
     }
 
     public Kernel Create(string modelId)
@@ -45,6 +47,9 @@ public sealed class SemanticKernelFactory : ISemanticKernelFactory
         //REGISTER PLUGINS HERE
         RegisterPlugins(builder);
 
+        //REGISTER ACTION FILTERS HERE
+        RegisterActionFilters(builder);
+        
         return builder.Build();
     }
 
@@ -64,6 +69,14 @@ public sealed class SemanticKernelFactory : ISemanticKernelFactory
     private void RegisterPlugins(IKernelBuilder kernelBuilder)
     {
         kernelBuilder.Plugins.AddFromObject(_services.GetRequiredService<TerminalPlugin>(), "terminal");
+    }
+    
+    private void RegisterActionFilters(IKernelBuilder kernelBuilder)
+    {
+        kernelBuilder.Services.AddSingleton(_services.GetRequiredService<ILoggerFactory>());
+        kernelBuilder.Services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+
+        kernelBuilder.Services.AddSingleton<IFunctionInvocationFilter, TerminalCommandGuardFilter>();
     }
 
 }
